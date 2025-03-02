@@ -27,8 +27,8 @@ public class Player{
         sortAllCards();
         String outcome = "Nothing";
 
-        ArrayList<Integer> rankF = findRankingFrequency();
-        ArrayList<Integer> suitF = findSuitFrequency();
+        // ArrayList<Integer> rankF = findRankingFrequency();
+        // ArrayList<Integer> suitF = findSuitFrequency();
 
         if (highCard()) {
             outcome = "High Card";
@@ -38,6 +38,27 @@ public class Player{
         }
         if(twoPair()){
             outcome = "Two Pair";
+        }
+        if(threeOfAKind()){
+            outcome = "Three of a Kind";
+        }
+        if(straight()){
+            outcome = "Straight";
+        }
+        if(flush()){
+            outcome = "Flush";
+        }
+        if(fullHouse()){
+            outcome = "Full House";
+        }
+        if(quads()){
+            outcome = "Four of a Kind";
+        }
+        if (straightFlush()){
+            outcome = "Straight Flush";
+        }
+        if(royalFlush()){
+            outcome = "Royal Flush";
         }
         
         return outcome;
@@ -82,7 +103,91 @@ public class Player{
 
     }
 
+    private boolean threeOfAKind(){
+        ArrayList<Integer> rankFrequency = findRankingFrequency();
+        for(int i = 0; i<rankFrequency.size(); i++){
+            if(rankFrequency.get(i)==3){
+                return true;
+            }
+        }
+        return false;
+    }
 
+    private boolean straight(){
+        int num1 = Utility.getRankValue(allCards.get(0).getRank());
+        int num2 = Utility.getRankValue(allCards.get(1).getRank());
+        int num3 = Utility.getRankValue(allCards.get(2).getRank());
+        int num4 = Utility.getRankValue(allCards.get(3).getRank());
+        int num5 = Utility.getRankValue(allCards.get(4).getRank());
+        if(num1+1 == num2){
+            if(num2+1 == num3){
+                if(num3+1 == num4){
+                    if(num4+1 == num5){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean flush(){
+        ArrayList<Integer> suitFrequency = findSuitFrequency();
+        for(int i = 0; i<suitFrequency.size(); i++){
+            if(suitFrequency.get(i) == 5){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean fullHouse(){
+        ArrayList<Integer> rankFrequency = findRankingFrequency();
+        boolean threeKind = false;
+        boolean twoKind = false;
+        for(int i = 0; i<rankFrequency.size(); i++){
+            if(rankFrequency.get(i) == 3){
+                threeKind = true;
+            }
+            if(rankFrequency.get(i) == 2){
+                twoKind = true;
+            }
+        }
+        if(threeKind == true && twoKind == true){
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    private boolean quads(){
+        ArrayList<Integer> rankFrequency = findRankingFrequency();
+        for(int i = 0; i<rankFrequency.size(); i++){
+            if(rankFrequency.get(i)==4){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean straightFlush(){
+        boolean isStraight = straight();
+        boolean isFlush = flush();
+        if(isFlush == true && isStraight == true){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean royalFlush(){
+        if(allCards.get(0).getRank().equals("10") && straightFlush() == true){
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public void sortAllCards(){
         for(int i = 0; i<allCards.size(); i++){
